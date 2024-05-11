@@ -1,6 +1,7 @@
 "use strict";
 var ECL = {};
 (function() {
+	const RFC4648_BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 //
 // Escape Codec Library: ecl.js (Ver.041208)
 //
@@ -123,7 +124,7 @@ UnescapeUnicode=function(str){
 };
 
 EscapeUTF7=function(str){
-	var B="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split(""),
+	var B=RFC4648_BASE64.split(""),
 	E=function(s){
 		var c=s.charCodeAt(0);
 		return B[c>>10]+B[c>>4&63]+B[(c&15)<<2|(c=s.charCodeAt(1))>>14]+(0<=c?B[c>>8&63]+B[c>>2&63]+B[(c&3)<<4|(c=s.charCodeAt(2))>>12]+(0<=c?B[c>>6&63]+B[c&63]:""):"")
@@ -138,7 +139,7 @@ EscapeUTF7=function(str){
 
 UnescapeUTF7=function(str){
 	var i=0,B={};
-	while(i<64)B["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(i)]=i++;
+	while(i<64)B[RFC4648_BASE64.charAt(i)]=i++;
 	return str.replace(RegExp("[+][+/-9A-Za-z]*-?","g"),function(s){
 		if("+-"==s)return "+";
 		var b=B[s.charAt(1)],c,i=1,t="";
@@ -751,7 +752,7 @@ enc.Base64.toU = function(array, from) {
 */
 enc.Base64.fromB = function(array) {
 	var a=[],i=0,il=array.length,
-			b="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",B=[],c;
+			b=RFC4648_BASE64,B=[],c;
 	for(i=0;i<64;i++) B.push(b.charCodeAt(i));
 	for(i=0;i<il;i++) a.push(B[(c=array[i])>>>2],B[(c&3)<<4|(c=array[++i])>>>4],B[(c&15)<<2|(c=array[++i])>>>6],B[63&c]);
 	(i=il%3)!==0&&(a.pop(),i===1&&a.pop());
@@ -764,7 +765,7 @@ enc.Base64.fromB = function(array) {
 */
 enc.Base64.toB = function(array) {
 	var i=0,a=[],il=array.length,B={},b,c;
-	while(i<64)B["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charCodeAt(i)]=i++;
+	while(i<64)B[RFC4648_BASE64.charCodeAt(i)]=i++;
 	for(i=0;i<il;i++) a.push((c=B[array[i]])<<2|(c=B[array[++i]])>>>4,(c&15)<<4|(c=B[array[++i]])>>>2,(c&3)<<6|B[array[++i]]);
 	(i=il%4)!==0&&(a.pop(),i<3&&a.pop());
 	return a;
